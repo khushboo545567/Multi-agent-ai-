@@ -30,10 +30,14 @@ const login = async (req, res) => {
       "EX",
       7 * 24 * 60 * 60,
     );
+
+    const test = await redis.get(`session-${sessionId}`);
+    console.log("Stored session:", test);
+
     res.cookie("session", sessionId, {
       httpOnly: true,
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -60,4 +64,22 @@ const logout = async (req, res) => {
     });
   }
 };
-export { login, logout };
+
+const getCurrUser = async (req, res) => {
+  try {
+    // const user = req.user;
+    const user = JSON.parse(req.headers["x-user"]);
+    console.log("user data from req. " + user);
+    if (!user) {
+      return res.status(400).json({ message: "user not found !" });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+export { login, logout, getCurrUser };
