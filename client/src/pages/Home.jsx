@@ -5,9 +5,12 @@ import api from "../../utils/axios";
 import { FcGoogle } from "react-icons/fc";
 
 function Home() {
+  const { userData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleLogin = async (token) => {
     try {
       const { data } = await api.post("/auth/api/v1/user/login", { token });
+      dispatch(setUserData(data));
     } catch (error) {
       console.log(error);
     }

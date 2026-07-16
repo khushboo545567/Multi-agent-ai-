@@ -1,11 +1,15 @@
 import { useEffect } from "react";
 import Home from "./pages/Home";
 import getCurrUser from "../features/getCurrUser";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/slice/auth.slice";
 
 function App() {
+  const dispatch = useDispatch();
   useEffect(() => {
     const getUser = async () => {
-      getCurrUser();
+      const data = await getCurrUser();
+      dispatch(setUserData(data));
     };
     getUser();
   }, []);
