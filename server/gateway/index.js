@@ -36,7 +36,7 @@ app.use(
 // unprotected route
 app.use("/auth", proxy(process.env.AUTH_SERVICE));
 
-app.use("/chat", proxy(process.env.CHAT_SERVICE));
+app.use("/chat", verifySession, proxy(process.env.CHAT_SERVICE));
 
 app.listen(port, () => {
   console.log(`Gateway started on port ${port}`);
