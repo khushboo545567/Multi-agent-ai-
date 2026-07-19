@@ -1,11 +1,11 @@
-import express from "expres";
+import express from "express";
 import {
   createConv,
   getConversation,
   getMessages,
   saveMessage,
   updateConv,
-} from "../controller/chat.controller";
+} from "../controller/chat.controller.js";
 
 const chatRoute = express.Router();
 

@@ -78,4 +78,5 @@ const getMessages = async (req, res) => {
     return res.status(500).json({ message: `get messages error ${error}` });
   }
 };
+
 export { createConv, getConversation, getMessages, saveMessage, updateConv };

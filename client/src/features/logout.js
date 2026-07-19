@@ -1,0 +1,11 @@
+import React from "react";
+import api from "../../utils/axios";
+
+async function logOut() {
+  try {
+    const { data } = await api.get("/auth/log-out");
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}

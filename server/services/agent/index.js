@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./config/db.js";
+import agentRouter from "./routes/agent.route.js";
 dotenv.config();
 
 const app = express();
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   return res.json({ message: "hello from agent service" });
 });
+
+app.get("/", agentRouter);
 
 connectDb();
 

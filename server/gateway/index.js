@@ -33,6 +33,15 @@ app.use(
     },
   }),
 );
+app.use(
+  "/auth/log-out",
+  verifySession,
+  proxy(process.env.AUTH_SERVICE, {
+    proxyReqPathResolver: () => {
+      return "/api/v1/user/logout";
+    },
+  }),
+);
 // unprotected route
 app.use("/auth", proxy(process.env.AUTH_SERVICE));
 

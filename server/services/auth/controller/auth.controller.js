@@ -32,7 +32,6 @@ const login = async (req, res) => {
     );
 
     const test = await redis.get(`session-${sessionId}`);
-    console.log("Stored session:", test);
 
     res.cookie("session", sessionId, {
       httpOnly: true,
@@ -69,7 +68,7 @@ const getCurrUser = async (req, res) => {
   try {
     // const user = req.user;
     const user = JSON.parse(req.headers["x-user"]);
-    console.log("user data from req. " + user);
+
     if (!user) {
       return res.status(400).json({ message: "user not found !" });
     }
