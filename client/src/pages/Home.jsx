@@ -15,7 +15,7 @@ function Home() {
   const handleLogin = async (token) => {
     try {
       const { data } = await api.post("/auth/api/v1/user/login", { token });
-      dispatch(setUserData(data));
+      dispatch(setUserData(data.user));
     } catch (error) {
       console.log(error);
     }

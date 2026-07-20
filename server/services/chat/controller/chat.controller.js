@@ -8,6 +8,7 @@ const createConv = async (req, res) => {
     const conversation = await Conversation.create({
       userId: userId,
     });
+    console.log("converstaion creation ", conversation);
     return res.status(200).json(conversation);
   } catch (error) {
     return res

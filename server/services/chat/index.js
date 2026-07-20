@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  return res.json({ message: "hello from auth service" });
+  return res.json({ message: "hello from chat service" });
 });
 
 app.use("/api/v1/chat", chatRoute);

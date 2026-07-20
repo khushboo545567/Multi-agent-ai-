@@ -24,13 +24,15 @@ function SideBar() {
   const { conversations, selectedConversation } = useSelector(
     (state) => state.conversation,
   );
+
   const { userData } = useSelector((state) => state.user);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    if (!userData?._id) return;
+    // if (!userData?.userId) return;
     const getConv = async () => {
       const data = await getConversation();
+
       dispatch(setConversation(data));
     };
     getConv();
@@ -124,7 +126,7 @@ function SideBar() {
               <div
                 key={conv._id}
                 onClick={() => dispatch(setSelectedConversation(conv))}
-                className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 broder-indigo-500/18" : "bg-transparent border-transparent"}`}
+                className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border border-gray-700 transition-colors duration-150 ${isActive ? "bg-indigo-500/20 broder-indigo-500/18" : "bg-transparent border-transparent"}`}
               >
                 <div
                   className={`flex items-center justify-center shrink-0 w-7 h-7 ${isActive ? "bg-indigo-500/15 text-indigo-400" : "bg-white/5 text-slate-500"}`}

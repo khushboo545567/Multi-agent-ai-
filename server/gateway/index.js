@@ -4,6 +4,7 @@ import proxy from "express-http-proxy";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import verifySession from "./middleware/auth.middleware.js";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ app.use(
     credentials: true,
   }),
 );
-
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

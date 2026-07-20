@@ -1,4 +1,6 @@
 import { app } from "../config/firebase.js";
+import dotenv from "dotenv";
+dotenv.config();
 import { getAuth } from "firebase-admin/auth";
 import User from "../models/user.model.js";
 import redis from "../../../shared/redis/redis.js";
@@ -19,7 +21,7 @@ const login = async (req, res) => {
       });
     }
     const sessionId = crypto.randomUUID();
-    await redis.set(
+    const result = await redis.set(
       `session-${sessionId}`,
       JSON.stringify({
         userId: user._id,

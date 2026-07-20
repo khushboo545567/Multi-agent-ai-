@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import redis from "../../shared/redis/redis.js";
 
 const verifySession = async (req, res, next) => {
@@ -16,9 +18,7 @@ const verifySession = async (req, res, next) => {
 
     // req.user = JSON.parse(data);
     req.headers["x-user"] = JSON.stringify(JSON.parse(data));
-    next();
-
-    next();
+    return next();
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
   }
