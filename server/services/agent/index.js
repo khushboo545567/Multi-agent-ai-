@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   return res.json({ message: "hello from agent service" });
 });
 
-app.get("/", agentRouter);
+app.use("/api/v1/agent", agentRouter);
 
 connectDb();
 

@@ -37,6 +37,7 @@ const getConversation = async (req, res) => {
   try {
     const user = JSON.parse(req.headers["x-user"]);
     const userId = user.userId;
+
     const conversation = await Conversation.find({
       userId: userId,
     }).sort({ updatedAt: -1 });
@@ -52,7 +53,7 @@ const getConversation = async (req, res) => {
 const saveMessage = async (req, res) => {
   try {
     const { conversationId, role, content } = req.body;
-
+    console.log("send message data ", conversationId, role, content);
     if (!conversationId || !role || !content) {
       return res.status(400).json({ message: "all fields are reqired" });
     }
@@ -73,7 +74,7 @@ const getMessages = async (req, res) => {
 
     const messages = await Message.find({
       conversationId,
-    }).sort({ createdAt: -1 });
+    });
     return res.status(200).json(messages);
   } catch (error) {
     return res.status(500).json({ message: `get messages error ${error}` });

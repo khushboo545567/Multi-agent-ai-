@@ -5,12 +5,12 @@ import redis from "../../shared/redis/redis.js";
 const verifySession = async (req, res, next) => {
   try {
     const session = req.cookies?.session;
-
+    console.log("session from frntend", session);
     if (!session) {
       return res.status(401).json({ message: "Unauthorized user" });
     }
-
     const data = await redis.get(`session-${session}`);
+    console.log("redis data", data);
 
     if (!data) {
       return res.status(401).json({ message: "Session has expired" });

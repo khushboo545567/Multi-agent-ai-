@@ -24,7 +24,7 @@ function SideBar() {
   const { conversations, selectedConversation } = useSelector(
     (state) => state.conversation,
   );
-
+  console.log("selected conversation", selectedConversation);
   const { userData } = useSelector((state) => state.user);
   const [imageError, setImageError] = useState(false);
 

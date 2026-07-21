@@ -4,7 +4,7 @@ import { router } from "./router.js";
 import { chatAgent } from "../agents/chat.agent.js";
 import { searchAgent } from "../agents/search.agent.js";
 import { coadingAgent } from "../agents/coding.agent.js";
-import { pdfAgent } from "../agents/pdf.agent";
+import { pdfAgent } from "../agents/pdf.agent.js";
 import { pptAgent } from "../agents/ppt.agent.js";
 import { visionAgent } from "../agents/vision.js";
 
