@@ -1,7 +1,9 @@
 import React from "react";
 import Markdown from "react-markdown";
+
 function MessageBubble({ role, content }) {
   const isUser = role === "user";
+
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div

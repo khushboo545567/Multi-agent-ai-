@@ -20,16 +20,32 @@ const createConv = async (req, res) => {
 const updateConv = async (req, res) => {
   try {
     const { conversationId, title } = req.body;
-    const update = await Conversation.findByIdAndUpdate(
+
+    if (!conversationId || !title) {
+      return res.status(400).json({
+        message: "conversationId and title are required",
+      });
+    }
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
       conversationId,
       { title },
-      { new: true },
+      { new: true, runValidators: true },
     );
-    return res.status(200).json(update);
+
+    if (!updatedConversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+
+    return res.status(200).json(updatedConversation);
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: `update conversation error ${error}` });
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to update conversation",
+    });
   }
 };
 

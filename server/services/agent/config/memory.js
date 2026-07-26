@@ -14,8 +14,8 @@ export const getMemory = async (conversationId) => {
 };
 
 // add messagse in redis only 20
-export const addMessage = async (conversationId, RouterRunnable, content) => {
-  const key = `messages-${conversationId}`;
+export const addMessage = async (conversationId, role, content) => {
+  const key = `conversation-${conversationId}`;
   const rawMessages = await redis.get(key);
   const messages = rawMessages ? JSON.parse(rawMessages) : [];
   messages.push({
@@ -25,5 +25,5 @@ export const addMessage = async (conversationId, RouterRunnable, content) => {
   if (messages.length > 20) {
     messages.shift();
   }
-  await redis.set(key, JSON.stringify(messages));
+  await redis.set(key, JSON.stringify(messages), "EX", 24 * 60 * 60);
 };

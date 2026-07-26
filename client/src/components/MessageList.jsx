@@ -4,10 +4,10 @@ import MessageBubble from "./MessageBubble";
 
 function MessageList() {
   const { selectedConversation } = useSelector((state) => state.conversation);
-  const { messages } = useSelector((state) => state.message);
+  const { messages, thinking } = useSelector((state) => state.message);
   return (
     <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 scrollbar:none [&::-webkit-scrollbar]:hidden">
-      {messages.length === 0 || !selectedConversation ? (
+      {!selectedConversation ? (
         <div className="h-full flex flex-col items-center justify-center gap-4 text-center ">
           <div className="flex flex-col gap-1.5">
             <h1 className="text-[20px] font-semibold text-slate-200 tracking-tight">
@@ -29,6 +29,7 @@ function MessageList() {
               <MessageBubble role={msg?.role} content={msg?.content} />
             </div>
           ))}
+          {thinking && <MessageBubble role="assistant" content="Thinking..." />}
         </div>
       )}
     </div>

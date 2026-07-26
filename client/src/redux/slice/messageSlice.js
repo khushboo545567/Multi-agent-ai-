@@ -4,6 +4,7 @@ const messageSlice = createSlice({
   name: "message",
   initialState: {
     messages: [],
+    thinking: false,
   },
   reducers: {
     setMessages: (state, action) => {
@@ -12,8 +13,11 @@ const messageSlice = createSlice({
     addMessages: (state, action) => {
       state.messages.push(action.payload);
     },
+    setThinking: (state, action) => {
+      state.thinking = action.payload;
+    },
   },
 });
 
-export const { setMessages, addMessages } = messageSlice.actions;
+export const { setMessages, addMessages, setThinking } = messageSlice.actions;
 export default messageSlice.reducer;

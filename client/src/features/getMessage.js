@@ -12,3 +12,5 @@ async function getMessage(id) {
     return [];
   }
 }
+
+export default getMessage;

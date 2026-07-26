@@ -17,6 +17,8 @@ import {
 } from "../redux/slice/conversationSlice";
 import createConversation from "../features/createConversation";
 import { setUserData } from "../redux/slice/auth.slice";
+import logout from "../features/logout";
+import { setMessages } from "../redux/slice/messageSlice";
 
 function SideBar() {
   const [collapse, setCollapse] = useState(false);
@@ -38,11 +40,6 @@ function SideBar() {
     getConv();
   }, [dispatch, userData?._id]);
 
-  const handleCreateConversation = async () => {
-    const data = await createConversation();
-    dispatch(addConversation(data));
-  };
-
   if (collapse) {
     return (
       <div className="hidden lg:flex flex-col items-center w-14 h-screen bg-[#0d0f1d] border-r border-white/6 py-4 gap-1 shrink-0">
@@ -54,7 +51,10 @@ function SideBar() {
         </button>
         <button
           className="flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 cursor-pointer"
-          onClick={handleCreateConversation}
+          onClick={() => {
+            dispatch(setSelectedConversation(null));
+            dispatch(setMessages([]));
+          }}
         >
           <Plus size={17} />
         </button>
@@ -101,7 +101,10 @@ function SideBar() {
         <div className="px-4 pt-4 pb-l">
           <button
             className="w-full flex items-center justify-center gap-2 text-sm font-medium text-white bg-blue-500 rounded-xl py-2.5 border-none cursor-pointer "
-            onClick={handleCreateConversation}
+            onClick={() => {
+              dispatch(setSelectedConversation(null));
+              dispatch(setMessages([]));
+            }}
           >
             <Plus size={15} />
             New Chat
@@ -173,7 +176,7 @@ function SideBar() {
                 <button
                   className="flex items-center justify-center w-7h-7 rounded-[7px] border-none bg-transparent text-slate-600 cursor-pointer hover:bg-gray-100"
                   onClick={() => {
-                    logOut();
+                    logout();
                     dispatch(setUserData(null));
                   }}
                 >

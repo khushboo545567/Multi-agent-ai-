@@ -30,13 +30,13 @@ Rules:
   const messages = [new SystemMessage(prompt)];
 
   history.forEach((msg) => {
-    if (msg.role == "user") {
-      messages.puch(new HumanMessage(msg.content));
+    if (msg.role === "user") {
+      messages.push(new HumanMessage(msg.content));
     } else {
       messages.push(new AIMessage(msg.content));
     }
   });
-  messages.push(new HumanMessage(state.prompt));
+  // messages.push(new HumanMessage(state.prompt));
   console.log(messages);
   const response = await llm.invoke(messages);
 

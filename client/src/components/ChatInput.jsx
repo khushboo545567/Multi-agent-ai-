@@ -2,26 +2,86 @@ import { Mic, Paperclip, Send } from "lucide-react";
 import React, { useState } from "react";
 import sendMessage from "../features/sendMessage";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessages } from "../redux/slice/messageSlice";
+import {
+  addMessages,
+  setMessages,
+  setThinking,
+} from "../redux/slice/messageSlice";
+import createConversation from "../features/createConversation";
+import {
+  addConversation,
+  setConvTitle,
+  setSelectedConversation,
+} from "../redux/slice/conversationSlice";
+import { updateConversation } from "../features/updateConversation";
+import getMessage from "../features/getMessage";
 
 function ChatInput() {
   const [value, setValue] = useState("");
+
   const { selectedConversation } = useSelector((state) => state.conversation);
+
   const dispatch = useDispatch();
-  const { messages } = useSelector((state) => state.message);
 
   const handleSendMessage = async () => {
-    const payload = {
-      prompt: value.trim(),
-      conversationId: selectedConversation._id,
-      role: "user",
-    };
-    dispatch(addMessages({ role: "user", content: value.trim() }));
-    setValue("");
-    const data = await sendMessage(payload);
-    dispatch(addMessages({ role: "assistant", content: data }));
-    console.log(data);
+    if (!value.trim()) return;
+
+    dispatch(setThinking(true));
+
+    try {
+      let conversation = selectedConversation;
+
+      if (!conversation) {
+        conversation = await createConversation();
+
+        dispatch(addConversation(conversation));
+        dispatch(setSelectedConversation(conversation));
+      }
+
+      if (conversation.title === "New Chat") {
+        await updateConversation({
+          conversationId: conversation._id,
+          title: value.trim(),
+        });
+
+        dispatch(
+          setConvTitle({
+            conversationId: conversation._id,
+            title: value.trim().slice(0, 40),
+          }),
+        );
+      }
+
+      dispatch(
+        addMessages({
+          role: "user",
+          content: value.trim(),
+        }),
+      );
+
+      const payload = {
+        prompt: value.trim(),
+        conversationId: conversation._id,
+        role: "user",
+      };
+
+      setValue("");
+
+      const data = await sendMessage(payload);
+
+      dispatch(
+        addMessages({
+          role: "assistant",
+          content: data,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(setThinking(false));
+    }
   };
+
   return (
     <div className="w-full overflow-hidden px-3 md:px-5 py-4 border-t border-white/6 bg-[#0d0f14]">
       <div className="flex flex-col gap-2 bg-white/3 border border-white/7 rounded-2xl px-4 pt-3 pb-3">
