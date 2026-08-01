@@ -68,7 +68,7 @@ const getConversation = async (req, res) => {
 
 const saveMessage = async (req, res) => {
   try {
-    const { conversationId, role, content } = req.body;
+    const { conversationId, role, content, images } = req.body;
     console.log("send message data ", conversationId, role, content);
     if (!conversationId || !role || !content) {
       return res.status(400).json({ message: "all fields are reqired" });
@@ -77,6 +77,7 @@ const saveMessage = async (req, res) => {
       conversationId,
       content,
       role,
+      images,
     });
     return res.status(200).json(message);
   } catch (error) {

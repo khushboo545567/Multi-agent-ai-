@@ -24,8 +24,8 @@ export const getModel = async (agent) => {
     case "chat":
       return groq;
     case "search":
-      return "groq";
-    case "coading":
+      return groq;
+    case "coding":
       return gemini;
     default:
       return groq;

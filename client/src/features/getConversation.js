@@ -8,6 +8,7 @@ const getConversation = async () => {
     return data;
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 export default getConversation;

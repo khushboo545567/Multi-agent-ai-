@@ -9,8 +9,41 @@ import { getMemory } from "../config/memory.js";
 export const chatAgent = async (state) => {
   const llm = await getModel("chat");
   const history = await getMemory(state.conversationId);
+  console.log("History:", history);
+
+  // const searchContext = state.searchResults
+  //   ? `Web Search Results: ${JSON.stringify(state.searchResults)} Answer the user using only the above search results.`
+  //   : "";
+
+  const searchContext = state.searchResults?.length
+    ? state.searchResults
+        .map(
+          (result, index) => `
+${index + 1}. ${result.title}
+
+${result.content}
+
+Source: ${result.url}
+`,
+        )
+        .join("\n\n")
+    : "No search results.";
+
+  console.log(searchContext);
+
   const prompt = `
   you are an intelligent ai assistant.
+  
+${searchContext}
+
+Instructions:
+
+- Prefer the search results over prior knowledge.
+- If multiple sources agree, summarize them.
+- If the search results don't contain the answer, say so.
+- Never invent facts.
+- Don't mention internal tools or that you performed a search.
+- Cite the source name naturally if appropriate.
 
 Rules:
 - For simple questions, greetings, and short queries, respond naturally in plain text.
@@ -37,6 +70,12 @@ Rules:
     }
   });
   // messages.push(new HumanMessage(state.prompt));
+  if (
+    history.length === 0 ||
+    history[history.length - 1].content !== state.prompt
+  ) {
+    messages.push(new HumanMessage(state.prompt));
+  }
   console.log(messages);
   const response = await llm.invoke(messages);
 

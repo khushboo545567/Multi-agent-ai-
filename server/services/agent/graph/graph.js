@@ -13,7 +13,7 @@ const workflow = new StateGraph(agentState);
 workflow.addNode("router", router);
 workflow.addNode("chat", chatAgent);
 workflow.addNode("search", searchAgent);
-workflow.addNode("coading", coadingAgent);
+workflow.addNode("coding", coadingAgent);
 workflow.addNode("pdf", pdfAgent);
 workflow.addNode("ppt", pptAgent);
 workflow.addNode("vision", visionAgent);
@@ -27,8 +27,8 @@ workflow.addConditionalEdges(
         return "chat";
       case "search":
         return "search";
-      case "coading":
-        return "coading";
+      case "coding":
+        return "coding";
       case "pdf":
         return "pdf";
       case "ppt":
@@ -43,7 +43,7 @@ workflow.addConditionalEdges(
   {
     chat: "chat",
     search: "search",
-    coading: "coading",
+    coding: "coding",
     pdf: "pdf",
     ppt: "ppt",
     vision: "vision",
@@ -53,7 +53,7 @@ workflow.addConditionalEdges(
 workflow.addEdge("search", "chat");
 workflow.addEdge("chat", "__end__");
 workflow.addEdge("pdf", "__end__");
-workflow.addEdge("coading", "__end__");
+workflow.addEdge("coding", "__end__");
 workflow.addEdge("ppt", "__end__");
 workflow.addEdge("vision", "__end__");
 

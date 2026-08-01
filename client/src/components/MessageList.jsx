@@ -26,7 +26,11 @@ function MessageList() {
         <div>
           {messages?.map((msg, i) => (
             <div key={i}>
-              <MessageBubble role={msg?.role} content={msg?.content} />
+              <MessageBubble
+                role={msg?.role}
+                content={msg?.content}
+                images={msg.images || []}
+              />
             </div>
           ))}
           {thinking && <MessageBubble role="assistant" content="Thinking..." />}
