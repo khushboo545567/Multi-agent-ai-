@@ -15,6 +15,7 @@ import sendMessage from "../features/sendMessage";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMessages,
+  setArtifacts,
   setMessages,
   setThinking,
 } from "../redux/slice/messageSlice";
@@ -81,7 +82,8 @@ function ChatInput() {
       setValue("");
 
       const data = await sendMessage(payload);
-
+      console.log("to check the artifacts", data);
+      dispatch(setArtifacts(data.artifacts || []));
       dispatch(
         addMessages({
           role: "assistant",

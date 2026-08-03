@@ -3,7 +3,7 @@ import Nav from "./Nav";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../redux/slice/messageSlice";
+import { setArtifacts, setMessages } from "../redux/slice/messageSlice";
 import getMessage from "../features/getMessage";
 
 function ChatArea() {
@@ -25,6 +25,7 @@ function ChatArea() {
     const fetchMessages = async () => {
       const data = await getMessage(selectedConversation._id);
       dispatch(setMessages(data));
+      dispatch(setArtifacts(data.artifcats || []));
     };
 
     fetchMessages();
