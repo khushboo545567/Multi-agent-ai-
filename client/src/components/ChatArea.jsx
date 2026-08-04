@@ -25,6 +25,9 @@ function ChatArea() {
     const fetchMessages = async () => {
       const data = await getMessage(selectedConversation._id);
       dispatch(setMessages(data));
+      const latestArtifactMessage = [...data]
+        .reverse()
+        .find((msg) => msg.artifcats && msg.artifcats.length > 0);
       dispatch(setArtifacts(data.artifcats || []));
     };
 

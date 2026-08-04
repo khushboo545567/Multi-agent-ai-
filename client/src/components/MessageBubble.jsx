@@ -1,65 +1,8 @@
-// import React, { Children } from "react";
-// import Markdown from "react-markdown";
-// import remarkGfm from "remark-gfm";
-
-// function MessageBubble({ role, content, images }) {
-//   const isUser = role === "user";
-
-//   return (
-//     <div className={`flex ${isUser ? "justify-end" : "justify-start"} pb-4`}>
-//       <div
-//         className={`max-w-[72%] px-4 py-2.5 rounded-2xl text-[13.5px] leading-relaxed ${isUser ? "bg-linear-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm" : "bg-white/4 border border-white/7 text-slate-200 rounded-tl-sm"}`}
-//       >
-//         {images.length > 0 && (
-//           <div className="flex flex-wrap gap-3 mt-4">
-//             {images.map((img, i) => (
-//               <img
-//                 key={i}
-//                 src={img}
-//                 loading="lazy"
-//                 onError={(e) => e.currentTarget.remove()}
-//                 className="w-40 h-28 rounded-xl object-cover border border-white/10 cursor-pointer hover:opacity-90 transition"
-//               />
-//             ))}
-//           </div>
-//         )}
-//         <Markdown
-//           remarkPlugins={[remarkGfm]}
-//           components={{
-//             h1: ({ Children }) => (
-//               <h1 className="text-2xl font-bold mt-5 mb-3">{Children}</h1>
-//             ),
-//             h2: ({ Children }) => (
-//               <h2 className="text-xl font-semibold mt-5 mb-3">{Children}</h2>
-//             ),
-//             h3: ({ Children }) => (
-//               <h3 className="text-lg  mt-5 mb-3">{Children}</h3>
-//             ),
-//             p: ({ Children }) => (
-//               <p className="mb-3 whitespace-pre-wrap wrap-break-words">
-//                 {Children}
-//               </p>
-//             ),
-//             ul: ({ Children }) => (
-//               <ul className="list-disc pl-5 space-y-1 my-2">{Children}</ul>
-//             ),
-//             ol: ({ Children }) => (
-//               <ol className="list-decimal pl-5 space-y-1 my-2">{Children}</ol>
-//             ),
-//           }}
-//         >
-//           {content}
-//         </Markdown>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default MessageBubble;
-
 import React from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 function MessageBubble({ role, content, images = [] }) {
   const isUser = role === "user";
@@ -110,19 +53,32 @@ function MessageBubble({ role, content, images = [] }) {
             ol: ({ children }) => (
               <ol className="list-decimal pl-5 space-y-1 my-2">{children}</ol>
             ),
-            code({ inline, children }) {
-              return inline ? (
-                <code className="bg-gray-700 px-1 rounded">{children}</code>
-              ) : (
-                <code>{children}</code>
-              );
-            },
 
-            pre({ children }) {
+            code({ className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "");
+
+              if (match) {
+                return (
+                  <SyntaxHighlighter
+                    style={oneDark}
+                    language={match[1]}
+                    customStyle={{
+                      margin: "1rem 0",
+                      borderRadius: "12px",
+                      padding: "18px",
+                      fontSize: "14px",
+                    }}
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                );
+              }
+
               return (
-                <pre className="bg-black/40 p-4 rounded-lg overflow-x-auto my-3">
+                <code className="bg-white/10 px-1.5 py-0.5 rounded text-pink-300">
                   {children}
-                </pre>
+                </code>
               );
             },
             a: ({ href, children }) => (

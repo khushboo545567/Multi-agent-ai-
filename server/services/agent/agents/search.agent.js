@@ -6,14 +6,6 @@ export const searchAgent = async (state) => {
       query: state.prompt,
     });
 
-    console.log("Search Results:", results);
-
-    // return {
-    //   ...state,
-    //   searchResults: results,
-    //   images: results.images || [],
-    // };
-
     return {
       ...state,
       searchResults: results.results,

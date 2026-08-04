@@ -33,7 +33,7 @@ export const router = async (state) => {
   recent developments,
   internet lookup.
 
-  coading:
+  coding:
   Generate code,
   debug code,
   build projects,
@@ -56,7 +56,7 @@ export const router = async (state) => {
 
   chat 
   search
-  coading
+  coding
   pdf
 
   User Query:

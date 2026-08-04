@@ -9,11 +9,6 @@ import { getMemory } from "../config/memory.js";
 export const chatAgent = async (state) => {
   const llm = await getModel("chat");
   const history = await getMemory(state.conversationId);
-  console.log("History:", history);
-
-  // const searchContext = state.searchResults
-  //   ? `Web Search Results: ${JSON.stringify(state.searchResults)} Answer the user using only the above search results.`
-  //   : "";
 
   const searchContext = state.searchResults?.length
     ? state.searchResults
@@ -28,8 +23,6 @@ Source: ${result.url}
         )
         .join("\n\n")
     : "No search results.";
-
-  console.log(searchContext);
 
   const prompt = `
   you are an intelligent ai assistant.
@@ -76,7 +69,7 @@ Rules:
   ) {
     messages.push(new HumanMessage(state.prompt));
   }
-  console.log(messages);
+
   const response = await llm.invoke(messages);
 
   return {

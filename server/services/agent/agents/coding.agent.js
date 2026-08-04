@@ -3,7 +3,7 @@ import { getModel } from "../config/llmModels.js";
 export const coadingAgent = async (state) => {
   const intentLlm = await getModel("intent");
   const llm = await getModel("coding");
-  const intentRes = await intentLlm.invoke(`
+  const intentResp = await intentLlm.invoke(`
     You are an intent classifier.
     Return ONLY one of these values.
     CODE_GENERATION
@@ -17,58 +17,148 @@ export const coadingAgent = async (state) => {
     User Resquest:
     ${state.prompt}
     `);
-  const intent = intentRes.content;
-  console.log(intent);
+  const intent = intentResp.content.trim();
+
   if (intent === "CODE_GENERATION") {
     const prompt = `
-    You are an agent
-    Generate the requested project.
-    Default stack:
-    -HTML
-    -CSS
-    -JavaScript
+    You are an expert Software Engineer and Code Generation Agent.
 
-    Use React / Next.js / Vue ONLY if explicitly requested.
+Your task is to generate source code that exactly matches the user's request.
 
-    RULES:
+IMPORTANT:
 
-    -Responsive
-    -Modern UI
-    -CSS Variables 
-    -Flexbox/Grid
-    -Smooth Scroll
-    -Hover Effects
-    -Beautiful spacing
-    -single page unless user asks otherwise.
+- First determine what the user is asking for.
+- Generate ONLY the files required for that technology.
+- Never assume HTML/CSS/JavaScript unless the user explicitly asks for a website or frontend.
+- Never generate unnecessary files.
 
-    Return ONLY valid JSON.
+Examples:
 
-    Schema:
+User:
+Write a Java program to add two numbers.
 
+Return:
+{
+  "files":[
     {
-    "files:[
-   { "name":"index.html",
-    "content":"..."},
-    {"name":"style.css",
-    "content":"..."},
-    {"name":"script.js","content":"..."}
-    ]    
+      "name":"AddTwoNumbers.java",
+      "content":"..."
     }
+  ]
+}
 
-    Rules:
-    - Output must start with {
-    - Output must end with }
-    -No markdown
-    - No extra text
-    - No \'\'\'
-    - Never mention intent
+-----------------------
 
-    User Request:
-    ${state.prompt}
-    `;
+User:
+Create a Python calculator.
+
+Return:
+{
+  "files":[
+    {
+      "name":"calculator.py",
+      "content":"..."
+    }
+  ]
+}
+
+-----------------------
+
+User:
+Build a Node.js Express API.
+
+Return:
+{
+  "files":[
+    {
+      "name":"package.json",
+      "content":"..."
+    },
+    {
+      "name":"server.js",
+      "content":"..."
+    }
+  ]
+}
+
+-----------------------
+
+User:
+Create a static portfolio website.
+
+Return:
+{
+  "files":[
+    {
+      "name":"index.html",
+      "content":"..."
+    },
+    {
+      "name":"style.css",
+      "content":"..."
+    },
+    {
+      "name":"script.js",
+      "content":"..."
+    }
+  ]
+}
+
+Rules:
+
+1. Detect the requested programming language/framework automatically.
+
+2. Generate ONLY the necessary files.
+
+3. Do not create extra files.
+
+4. If the user asks for a single file, return only one file.
+
+5. If the project requires multiple files, return all required files.
+
+6. Use best practices.
+
+7. Produce complete working code.
+
+8. Include comments only when helpful.
+
+9. Never omit important code using placeholders like:
+   // remaining code...
+   // implementation omitted...
+
+10. Return complete code.
+
+11. Return ONLY valid JSON.
+
+The JSON schema is:
+
+{
+  "files":[
+    {
+      "name":"filename.ext",
+      "content":"complete file content"
+    }
+  ]
+}
+
+STRICT RULES:
+
+- Output MUST start with {
+- Output MUST end with }
+- Do NOT wrap the JSON in 
+- Do NOT include markdown.
+- Do NOT explain anything.
+- Do NOT include any text before or after the JSON.
+- Escape quotes correctly.
+- Return valid parsable JSON.
+
+User Request:
+
+${state.prompt}
+  `;
 
     const res = await llm.invoke(prompt);
-    console.log(JSON.parse(res.content));
+
     const data = JSON.parse(res.content);
     return {
       ...state,
@@ -84,7 +174,7 @@ export const coadingAgent = async (state) => {
     };
   }
 
-  const intentRes = await intentLlm.invoke(`
+  const res = await intentLlm.invoke(`
     Use headings like:
 
     # Overview
@@ -98,7 +188,14 @@ export const coadingAgent = async (state) => {
     ${state.prompt}
     `);
 
-  const data = res.content;
+  const cleaned = res.content
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/, "")
+    .trim();
+
+  const data = JSON.parse(cleaned);
+
   return {
     ...state,
     aiResponse: data,
