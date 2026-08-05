@@ -152,6 +152,7 @@ STRICT RULES:
 - Escape quotes correctly.
 - Return valid parsable JSON.
 
+
 User Request:
 
 ${state.prompt}
